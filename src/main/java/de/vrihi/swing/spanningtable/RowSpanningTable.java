@@ -34,6 +34,13 @@ public class RowSpanningTable extends JTable
 		setUI(new RowSpanningTableUI());
 	}
 
+	public void setSpanModel(RowSpanModel spanModel)
+	{
+		this.spanModel = Objects.requireNonNull(spanModel);
+		setUI(new RowSpanningTableUI());
+		repaint();
+	}
+
 	public RowSpanModel getSpanModel()
 	{
 		return spanModel;
