@@ -77,6 +77,9 @@ public class RowSpanningTable extends JTable
 	@Override
 	public Rectangle getCellRect(int row, int column, boolean includeSpacing)
 	{
+		if (row < 0 || column < 0)
+			return new Rectangle();
+
 		if (spanModel == null)
 			return super.getCellRect(row, column, includeSpacing);
 
