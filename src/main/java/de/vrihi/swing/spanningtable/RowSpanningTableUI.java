@@ -14,6 +14,10 @@ public class RowSpanningTableUI extends BasicTableUI
 		Rectangle clip = g.getClipBounds();
 		Rectangle bounds = table.getBounds();
 
+		// account for the fact that the graphics has already been translated
+		// into the table's bounds
+		bounds.x = bounds.y = 0;
+
 		if (table.getRowCount() <= 0 || table.getColumnCount() <= 0 || !bounds.intersects(clip))
 			return;
 
