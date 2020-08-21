@@ -99,6 +99,11 @@ public class RowSpanningTable extends JTable
 		return rec;
 	}
 
+	public Rectangle getUnderlyingCellRect(int row, int col, boolean includeSpacing)
+	{
+		return super.getCellRect(row, col, includeSpacing);
+	}
+
 	@Override
 	public Component prepareRenderer(TableCellRenderer renderer, int row, int column)
 	{

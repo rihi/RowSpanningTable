@@ -118,8 +118,10 @@ public class RowSpanningTableUI extends BasicTableUI
 	{
 		g.setColor(table.getGridColor());
 
-		Rectangle minCell = table.getCellRect(rMin, cMin, true);
-		Rectangle maxCell = table.getCellRect(rMax, cMax, true);
+		RowSpanningTable spanTable = (RowSpanningTable) table;
+
+		Rectangle minCell = spanTable.getUnderlyingCellRect(rMin, cMin, true);
+		Rectangle maxCell = spanTable.getUnderlyingCellRect(rMax, cMax, true);
 		Rectangle damagedArea = minCell.union( maxCell );
 
 		if (table.getShowHorizontalLines()) {
@@ -132,7 +134,7 @@ public class RowSpanningTableUI extends BasicTableUI
 				for (int col = cMin; col <= cMax; col++)
 				{
 					int columnWidth = table.getColumnModel().getColumn(col).getWidth();
-					if (((RowSpanningTable) table).getViewRowSpan(row, col).maxRow <= row)
+					if (spanTable.getViewRowSpan(row, col).maxRow <= row)
 						drawHLine(g, x, x + columnWidth - 1, y - 1);
 
 					x += columnWidth;
