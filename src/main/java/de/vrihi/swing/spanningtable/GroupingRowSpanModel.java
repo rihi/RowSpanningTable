@@ -19,12 +19,12 @@ public class GroupingRowSpanModel implements RowSpanModel
 		Object val = tableModel.getValueAt(row, column);
 
 		int minRow = IntStream.iterate(row - 1, operand -> operand - 1)
-				.filter(value -> value < 0 || tableModel.getValueAt(value, column) != val)
+				.filter(value -> value < 0 || !tableModel.getValueAt(value, column).equals(val))
 				.findFirst()
 				.getAsInt() + 1;
 
 		int maxRow = IntStream.iterate(row + 1, operand -> operand + 1)
-				.filter(value -> value >= tableModel.getRowCount() || tableModel.getValueAt(value, column) != val)
+				.filter(value -> value >= tableModel.getRowCount() || !tableModel.getValueAt(value, column).equals(val))
 				.findFirst()
 				.getAsInt() - 1;
 
