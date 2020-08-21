@@ -5,7 +5,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class RowSpanningTable extends JTable
 {
@@ -46,13 +49,38 @@ public class RowSpanningTable extends JTable
 		return spanModel;
 	}
 
+	public RowSpan getViewRowSpan(int row, int column)
+	{
+		RowSpan span = spanModel.getSpan(convertRowIndexToModel(row), convertColumnIndexToModel(column));
+		return convertRowSpanToView(span, row);
+	}
+
+	public RowSpan convertRowSpanToView(RowSpan span, int row)
+	{
+		List<Integer> spanList = span.rows()
+				.mapToObj(this::convertRowIndexToView)
+				.filter(r -> r >= 0)
+				.collect(Collectors.toList());
+
+		long fewerRows = IntStream.iterate(1, operand -> operand + 1)
+				.map(offset -> row - offset)
+				.takeWhile(spanList::contains)
+				.count();
+		long additionalRows = IntStream.iterate(1, operand -> operand + 1)
+				.map(offset -> row + offset)
+				.takeWhile(spanList::contains)
+				.count();
+
+		return new RowSpan((int) (row - fewerRows), (int) (row + additionalRows));
+	}
+
 	@Override
 	public Rectangle getCellRect(int row, int column, boolean includeSpacing)
 	{
 		if (spanModel == null)
 			return super.getCellRect(row, column, includeSpacing);
 
-		RowSpan span = spanModel.getSpan(row, column);
+		RowSpan span = getViewRowSpan(row, column);
 
 		var rec = new Rectangle(-1, -1);
 		for (int r = span.minRow; r <= span.maxRow; r++)
@@ -86,7 +114,7 @@ public class RowSpanningTable extends JTable
 
 			if (spanModel != null)
 			{
-				RowSpan span = spanModel.getSpan(row, column);
+				RowSpan span = getViewRowSpan(row, column);
 
 				isSelected = span
 						.rows()

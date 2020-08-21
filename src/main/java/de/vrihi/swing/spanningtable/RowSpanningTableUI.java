@@ -78,7 +78,7 @@ public class RowSpanningTableUI extends BasicTableUI
 			for (int row = minRow; row <= maxRow; row++)
 			{
 				paintCell(row, col, g, table.getCellRect(row, col, true));
-				RowSpan span = ((RowSpanningTable) table).getSpanModel().getSpan(row, col);
+				RowSpan span = ((RowSpanningTable) table).getViewRowSpan(row, col);
 				row += span.maxRow - row;
 			}
 		}
@@ -124,7 +124,6 @@ public class RowSpanningTableUI extends BasicTableUI
 
 		if (table.getShowHorizontalLines()) {
 			int y = damagedArea.y;
-			RowSpanModel spanModel = ((RowSpanningTable) table).getSpanModel();
 
 			for (int row = rMin; row <= rMax; row++) {
 				y += table.getRowHeight(row);
@@ -133,7 +132,7 @@ public class RowSpanningTableUI extends BasicTableUI
 				for (int col = cMin; col <= cMax; col++)
 				{
 					int columnWidth = table.getColumnModel().getColumn(col).getWidth();
-					if (spanModel.getSpan(row, col).maxRow <= row)
+					if (((RowSpanningTable) table).getViewRowSpan(row, col).maxRow <= row)
 						drawHLine(g, x, x + columnWidth - 1, y - 1);
 
 					x += columnWidth;
